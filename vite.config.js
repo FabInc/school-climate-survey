@@ -10,4 +10,7 @@ export default defineConfig({
       'Content-Type': 'application/javascript; charset=utf-8',
     },
   },
+  build: {
+    outDir: 'docs'
+  }
 })
