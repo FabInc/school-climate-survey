@@ -1,0 +1,1144 @@
+{
+    "water-supply": [
+      {
+        "id": "ws1",
+        "text": "Water supply doesn't meet demand (over a 3 day period)?",
+        "help": "Consider if your school's water supply is insufficient to meet basic needs over a 3-day period. This includes drinking water, sanitation, and other essential uses.",
+        "next": { "yes": "ws2", "no": "ws4" }
+      },
+      {
+        "id": "ws2",
+        "text": "Is there a back-up water supply nearby that can be made accessible?",
+        "help": "Is there an alternative water source (like a municipal connection, another well, or water delivery service) that could be accessed?",
+        "next": { "yes": "rec_make_accessible", "no": "rec_drill_borehole" }
+      },
+      {
+        "id": "ws4",
+        "text": "Water supply meets demand (quantity of water) but isn't available from the source or the times when it's required?",
+        "help": "Is water available in sufficient quantity overall, but not when you need it? For example, intermittent municipal supply or seasonal water source variations.",
+        "next": { "yes": "rec_increase_storage", "no": "end" }
+      }
+    ],
+    "water-demand": [
+      {
+        "id": "wd1",
+        "text": "Are there flush toilets with cisterns?",
+        "help": "Does your school use conventional flush toilets that use a significant amount of water per flush?",
+        "next": { "yes": "rec_reduce_flush", "no": "wd2" }
+      },
+      {
+        "id": "wd2",
+        "text": "Are composting / dry toilets culturally feasible for this facility?",
+        "help": "Consider local cultural norms and acceptance. Would waterless toilet solutions be acceptable to students, staff, and the community?",
+        "next": { "yes": "rec_composting_toilets", "no": "wd3" }
+      },
+      {
+        "id": "wd3",
+        "text": "Is water used for irrigation?",
+        "help": "Is water being used for gardens, sports fields, or other landscaping purposes?",
+        "next": { "yes": "rec_grey_water", "no": "end" }
+      }
+    ],
+    "dust-impacts": [
+      {
+        "id": "di1",
+        "text": "Is the ground surface within the facility site a source of dust? Is bare earth that turns to dust?",
+        "help": "Look for large areas of exposed soil within your school grounds that could be generating dust, especially during dry periods.",
+        "next": { "yes": "rec_plant_vegetation", "no": "di2" }
+      },
+      {
+        "id": "di2",
+        "text": "Is there a main source of dust from outside of the facility? (e.g., an adjacent dirt road or a direction from which the dust comes?)",
+        "help": "Identify if dust is primarily coming from external sources like unpaved roads, construction sites, or agricultural fields.",
+        "next": { "yes": "di3", "no": "di5" }
+      },
+      {
+        "id": "di3",
+        "text": "Is there at least 3m between the facility building and the source of the dust?",
+        "help": "Estimate the distance between your school buildings and the identified external dust source. Is there at least 3 meters (about 10 feet) of space?",
+        "next": { "yes": "rec_external_screen", "no": "rec_infrastructure" }
+      },
+      {
+        "id": "di5",
+        "text": "Are cooling and ventilation reduced when the openings are closed off to dust?",
+        "help": "When windows and doors are closed to prevent dust entry, does the building become significantly hotter or poorly ventilated?",
+        "next": { "yes": "di6", "no": "di7" }
+      },
+      {
+        "id": "di6",
+        "text": "Is electrical supply capacity sufficient for AC?",
+        "help": "Does your school have adequate electrical infrastructure to support air conditioning systems?",
+        "next": { "yes": "rec_ac_systems", "no": "rec_ventilation_openings" }
+      },
+      {
+        "id": "di7",
+        "text": "Is lighting insufficient when openings are closed off to dust?",
+        "help": "When windows are closed to prevent dust, do rooms become too dark for effective teaching and learning?",
+        "next": { "yes": "rec_artificial_lighting", "no": "end" }
+      }
+    ],
+    "heat-impacts": [
+      {
+        "id": "hi1",
+        "text": "Direct sunlight on walls?",
+        "help": "Assess if direct sunlight hitting the exterior walls of the building is contributing to heat gain.",
+        "next": { "yes": ["hi2", "hi3"], "no": "end" }
+      },
+      {
+        "id": "hi2",
+        "text": "East and West walls?",
+        "help": "Determine if the east and west-facing walls are receiving direct sunlight, which can significantly increase heat gain.",
+        "next": { "yes": "hi4", "no": "end" }
+      },
+      {
+        "id": "hi3",
+        "text": "South and north walls?",
+        "help": "Assess if south and north-facing walls are receiving direct sunlight throughout the day.",
+        "next": { "yes": "hi5", "no": "end" }
+      },
+      {
+        "id": "hi4",
+        "text": "External shading device",
+        "help": "Consider external shading solutions for east and west walls to reduce direct sunlight exposure.",
+        "next": { "notPossible": "rec_heat_wall_facing", "yes": "check_natural_lighting" }
+      },
+      {
+        "id": "hi5",
+        "text": "Extend roof overhangs",
+        "help": "Extending roof overhangs can provide shading for walls, reducing heat gain.",
+        "next": { "optionA": "rec_off_setting", "optionB": "rec_additional_structure", "yes": "check_ventilation_cooling" }
+      },
+      {
+        "id": "hi6",
+        "text": "Direct sunlight through windows?",
+        "help": "Assess if direct sunlight entering through windows is causing indoor heating.",
+        "next": { "yes": ["hi7", "hi11"], "no": "end" }
+      },
+      {
+        "id": "hi7",
+        "text": "External shading device at windows",
+        "help": "Consider external shading solutions for windows to reduce direct sunlight penetration.",
+        "next": { "notPossible": "hi8", "yes": "end" }
+      },
+      {
+        "id": "hi8",
+        "text": "Are windows glazed?",
+        "help": "Check if windows have glazing that helps control heat gain.",
+        "next": { "yes": "hi9", "no": "end" }
+      },
+      {
+        "id": "hi9",
+        "text": "Can glazing be improved with tinting?",
+        "help": "Consider whether adding window tinting could improve heat control.",
+        "next": { "yes": "hi10", "no": "end" }
+      },
+      {
+        "id": "hi10",
+        "text": "Is there a ceiling in good condition?",
+        "help": "Assess the condition of existing ceilings for potential heat insulation improvements.",
+        "next": { "yes": "end", "no": ["rec_paint_ceiling", "rec_add_vents", "rec_repair_ceiling"] }
+      },
+      {
+        "id": "hi11",
+        "text": "Improved window design",
+        "help": "Consider redesigning windows to better control solar heat gain.",
+        "next": { "yes": ["rec_check_ventilation", "rec_check_natural_light"], "no": "end" }
+      },
+      {
+        "id": "hi12",
+        "text": "Heating through roof?",
+        "help": "Determine if significant heat gain is occurring through the roof structure.",
+        "next": { "yes": "hi13", "no": "end" }
+      },
+      {
+        "id": "hi13",
+        "text": "Is roof structure sound?",
+        "help": "Assess the structural integrity of the roof system.",
+        "next": { "yes": "hi14", "no": "hi15" }
+      },
+      {
+        "id": "hi14",
+        "text": "Are roof sheets in good condition?",
+        "help": "Check the condition of roof sheets or covering materials.",
+        "next": { "yes": "end", "no": ["rec_cool_roof", "rec_ventilate_roof", "rec_insulate_roof", "rec_roof_monitor"] }
+      },
+      {
+        "id": "hi15",
+        "text": "Reason for failure?",
+        "help": "Identify the primary cause of roof structure issues.",
+        "next": { "stormDamage": "rec_storm_roof", "rottenTrigrees": "rec_rotten_roof", "rotDisrepaired": "rec_disrepaired_roof", "insectAttack": "hi16" }
+      },
+      {
+        "id": "hi16",
+        "text": "Is insect-resistant timber species available?",
+        "help": "Determine if locally available timber species are naturally resistant to insect damage.",
+        "next": { "yes": "rec_insect_roof", "no": "hi17" }
+      },
+      {
+        "id": "hi17",
+        "text": "Is environmentally-friendly insect treatment available for timber?",
+        "help": "Check the availability of eco-friendly wood treatments for insect resistance.",
+        "next": { "yes": "rec_treatment_roof", "no": "end" }
+      }
+    ],
+    "rainwater-entry": [
+      {
+        "id": "re1",
+        "text": "Rainwater enters through roof",
+        "help": "Assess if rainwater is penetrating through the roof structure.",
+        "next": { "yes": "re2", "no": "end" }
+      },
+      {
+        "id": "re2",
+        "text": "Is the roof structurally sound?",
+        "help": "Evaluate the overall structural integrity of the roof system.",
+        "next": { "yes": "re3", "no": "rec_lesson_failure" }
+      },
+      {
+        "id": "re3",
+        "text": "Are the roof sheets generally in good condition?",
+        "help": "Inspect the roof sheets for damage, deterioration, or improper installation.",
+        "next": { "yes": "re4", "no": "rec_replace_sheets" }
+      },
+      {
+        "id": "re4",
+        "text": "Is leaking only on the junction between sheets?",
+        "help": "Determine if leaks are primarily occurring at the seams or junctions between roof sheets.",
+        "next": { "yes": "re5", "no": "re6" }
+      },
+      {
+        "id": "re5",
+        "text": "Is the gradient of the roof greater than 20 degrees?",
+        "help": "Measure the slope of the roof to determine if it has adequate pitch for drainage.",
+        "next": { "yes": "rec_reposition_sheets", "no": "rec_correct_structure" }
+      },
+      {
+        "id": "re6",
+        "text": "Is the leaking only at the ridge?",
+        "help": "Identify if leaks are concentrated along the ridge of the roof.",
+        "next": { "yes": "rec_replace_ridge", "no": "re7" }
+      },
+      {
+        "id": "re7",
+        "text": "Is leaking in random, isolated locations?",
+        "help": "Determine if leaks appear in scattered locations with no clear pattern.",
+        "next": { "yes": "rec_replace_washers", "no": "end" }
+      },
+      {
+        "id": "re8",
+        "text": "Rainwater enters through windows",
+        "help": "Assess if rainwater penetration is occurring through windows.",
+        "next": { "yes": "re9", "no": "end" }
+      },
+      {
+        "id": "re9",
+        "text": "During heavy vertical rain?",
+        "help": "Determine if leakage happens primarily during intense downpours with little wind.",
+        "next": { "yes": "rec_extend_roof", "no": "re10" }
+      },
+      {
+        "id": "re10",
+        "text": "Only during storm events when there are strong winds too?",
+        "help": "Identify if leakage occurs mainly during windy rainstorms.",
+        "next": { "yes": "rec_add_awnings", "no": "end" }
+      },
+      {
+        "id": "re11",
+        "text": "Does water get in under the bottom of the window?",
+        "help": "Check if water is penetrating beneath the window sill or bottom frame.",
+        "next": { "yes": "rec_add_sill", "no": "end" }
+      },
+      {
+        "id": "re12",
+        "text": "Rainwater enters under doors",
+        "help": "Assess if rainwater is entering beneath doorways.",
+        "next": { "yes": "re13", "no": "end" }
+      },
+      {
+        "id": "re13",
+        "text": "Does the floor ground in front of the door rise from the building away from the floor?",
+        "help": "Check if the ground slopes toward the building instead of away from it.",
+        "next": { "yes": "end", "no": "re14" }
+      },
+      {
+        "id": "re14",
+        "text": "Is there a step of at least 1\" (25mm) at the door that's visible and usable and raised?",
+        "help": "Determine if doorways have an adequate threshold to prevent water entry.",
+        "next": { "yes": "end", "no": "rec_add_step" }
+      }
+    ],
+    "flood-management": [
+      {
+        "id": "fm1",
+        "text": "The source of flood waters are external to the site",
+        "help": "Determine if flooding originates from beyond the school grounds.",
+        "next": { "yes": "fm2", "no": "end" }
+      },
+      {
+        "id": "fm2",
+        "text": "Is there a local drainage system with channels etc. in place where floodwater can be diverted into?",
+        "help": "Assess if local drainage infrastructure exists that could be utilized.",
+        "next": { "yes": "rec_terminal_drainage", "no": "fm3" }
+      },
+      {
+        "id": "fm3",
+        "text": "Is there space on the site for water collection (run away)?",
+        "help": "Evaluate if the site has adequate space for water detention or retention areas.",
+        "next": { "yes": "fm4", "no": "rec_infrastructure_project" }
+      },
+      {
+        "id": "fm4",
+        "text": "Water collection",
+        "help": "Consider implementing water collection solutions.",
+        "next": { "optionA": "rec_rainwater_tank", "optionB": "rec_swaleways", "no": "end" }
+      },
+      {
+        "id": "fm5",
+        "text": "Drainage within the site is insufficient to drain rainwater",
+        "help": "Assess if on-site drainage systems are inadequate for managing rainwater.",
+        "next": { "yes": "fm6", "no": "end" }
+      },
+      {
+        "id": "fm6",
+        "text": "Is there a local drainage system nearby where surface runoff rainwater can be diverted into?",
+        "help": "Determine if existing drainage infrastructure is available near the site.",
+        "next": { "yes": "rec_improve_drainage", "no": "end" }
+      },
+      {
+        "id": "fm7",
+        "text": "Floods wash away soils from under buildings or damage them from floods",
+        "help": "Assess if flooding is causing soil erosion or structural damage to buildings.",
+        "next": { "yes": "fm8", "no": "end" }
+      },
+      {
+        "id": "fm8",
+        "text": "Can the floor level of the building be raised?",
+        "help": "Evaluate if it's feasible to elevate building floor levels above flood elevation.",
+        "next": { "yes": "rec_raise_floor", "no": "fm9" }
+      },
+      {
+        "id": "fm9",
+        "text": "Does the floor drain out of the building?",
+        "help": "Determine if water that enters the building can drain out easily.",
+        "next": { "yes": "fm10", "no": "rec_add_floor_drainage" }
+      },
+      {
+        "id": "fm10",
+        "text": "Are electrical sockets and switches at least 1\" above the floor?",
+        "help": "Check if electrical fixtures are positioned at a safe height above potential flood levels.",
+        "next": { "yes": "end", "no": "rec_electrical_protection" }
+      },
+      {
+        "id": "fm11",
+        "text": "Water supply becomes contaminated during flooding",
+        "help": "Assess if flood events compromise water quality.",
+        "next": { "yes": "fm12", "no": "end" }
+      },
+      {
+        "id": "fm12",
+        "text": "Is water source at least 10m away from toilet areas or waste facilities (solid waste)?",
+        "help": "Determine if adequate separation exists between water sources and potential contamination sources.",
+        "next": { "yes": "end", "no": "rec_relocate_source" }
+      },
+      {
+        "id": "fm13",
+        "text": "Waste (rubbish) blocks drainage system",
+        "help": "Assess if solid waste is impeding drainage systems.",
+        "next": { "yes": "fm14", "no": "end" }
+      },
+      {
+        "id": "fm14",
+        "text": "Is there a system for removing rubbish from the facility site?",
+        "help": "Determine if waste management systems are in place.",
+        "next": { "yes": "rec_drainage_clearing", "no": "rec_waste_system" }
+      },
+      {
+        "id": "fm15",
+        "text": "Is there sufficient storage capacity for waste at the facility?",
+        "help": "Evaluate if adequate waste storage capacity exists on site.",
+        "next": { "yes": "fm16", "no": "rec_increase_capacity" }
+      },
+      {
+        "id": "fm16",
+        "text": "Is upslope storage protected from severe winds and storms?",
+        "help": "Assess if waste storage areas are secure during extreme weather.",
+        "next": { "yes": "end", "no": "rec_protect_storage" }
+      },
+      {
+        "id": "fm17",
+        "text": "Sewage system / foul water drainage - problems",
+        "help": "Assess issues with sewage or foul water drainage systems.",
+        "next": { "yes": "fm18", "no": "end" }
+      },
+      {
+        "id": "fm18",
+        "text": "Are the toilets above flood levels?",
+        "help": "Determine if toilet facilities are positioned above potential flood levels.",
+        "next": { "yes": "end", "no": "rec_increase_toilet_numbers" }
+      },
+      {
+        "id": "fm19",
+        "text": "Is there vehicle access to septic tanks for emptying?",
+        "help": "Assess if maintenance vehicles can access septic systems.",
+        "next": { "yes": "fm20", "no": "rec_add_access" }
+      },
+      {
+        "id": "fm20",
+        "text": "Is septic tank of sufficient volume for usage?",
+        "help": "Evaluate if septic tank capacity is adequate for the facility's needs.",
+        "next": { "yes": "fm21", "no": "rec_add_capacity" }
+      },
+      {
+        "id": "fm21",
+        "text": "Are the lids and manholes for the system above flood water levels?",
+        "help": "Check if system access points are positioned above flood levels to prevent infiltration.",
+        "next": { "yes": "end", "no": "rec_raise_lids" }
+      },
+      {
+        "id": "fm22",
+        "text": "Can the site facility be subjected to flash floods?",
+        "help": "Assess vulnerability to rapid-onset flooding events.",
+        "next": { "yes": "fm23", "no": "rec_early_warning" }
+      },
+      {
+        "id": "fm23",
+        "text": "Is there a safe escape route from the facility site (leading to higher land)?",
+        "help": "Identify evacuation routes to higher elevation areas.",
+        "next": { "yes": "rec_signage_escape", "no": "rec_escape_routes" }
+      }
+    ],
+    "wildfire-impacts": [
+      {
+        "id": "wi1",
+        "text": "Wildfires impact air quality",
+        "help": "Assess how wildfire smoke affects indoor air quality at the facility.",
+        "next": { "yes": "rec_air_quality", "no": "end" }
+      },
+      {
+        "id": "wi2",
+        "text": "Reducing risk of fires spreading onto site",
+        "help": "Evaluate preventive measures to protect the site from approaching wildfires.",
+        "next": { "yes": "rec_buffer_zone", "no": "end" }
+      },
+      {
+        "id": "wi3",
+        "text": "Escape",
+        "help": "Assess evacuation procedures and infrastructure in case of wildfires.",
+        "next": { "yes": ["wi4", "wi5"], "no": "end" }
+      },
+      {
+        "id": "wi4",
+        "text": "Protected escape route",
+        "help": "Identify designated evacuation routes protected from fire exposure.",
+        "next": { "yes": "rec_signage", "no": "end" }
+      },
+      {
+        "id": "wi5",
+        "text": "Emergency Vehicle access",
+        "help": "Ensure emergency vehicles can access the facility during wildfire events.",
+        "next": { "yes": "wi6", "no": "end" }
+      },
+      {
+        "id": "wi6",
+        "text": "Roads to site accessible by fire truck?",
+        "help": "Evaluate if fire trucks can reach the facility via existing roads.",
+        "next": { "yes": "end", "no": "wi7" }
+      },
+      {
+        "id": "wi7",
+        "text": "Fire truck can get to within 90m of buildings (also on hoisty ground)?",
+        "help": "Determine if fire trucks can get close enough to buildings for effective firefighting.",
+        "next": { "yes": "end", "no": "rec_hardstanding" }
+      },
+      {
+        "id": "wi8",
+        "text": "Reducing spread on site / damage to buildings",
+        "help": "Implement measures to prevent fire spread on site and minimize building damage.",
+        "next": { "yes": ["wi9", "wi10"], "no": "end" }
+      },
+      {
+        "id": "wi9",
+        "text": "Fuel and gas storage protected?",
+        "help": "Ensure proper protection of fuel and gas storage areas from fire exposure.",
+        "next": { "yes": "end", "no": "rec_protect_fuel" }
+      },
+      {
+        "id": "wi10",
+        "text": "Protecting building materials",
+        "help": "Select and maintain fire-resistant building materials.",
+        "next": { "yes": ["rec_fire_retardant", "wi11"], "no": "end" }
+      },
+      {
+        "id": "wi11",
+        "text": "Is there a water supply for fire fighting?",
+        "help": "Ensure adequate water supply is available for firefighting purposes.",
+        "next": { "yes": "wi12", "no": "rec_increase_water_storage" }
+      },
+      {
+        "id": "wi12",
+        "text": "Is the route to and from this supply protected from fire?",
+        "help": "Ensure access to water supply remains available during fire events.",
+        "next": { "yes": "end", "no": "rec_protect_route" }
+      }
+    ],
+    "electricity-supply": [
+      {
+        "id": "es1",
+        "text": "Increase electricity supply",
+        "help": "Evaluate options for enhancing electricity supply to the facility.",
+        "next": { "yes": ["es2", "es3"], "no": "end" }
+      },
+      {
+        "id": "es2",
+        "text": "Solar PV installation",
+        "help": "Consider implementing solar photovoltaic systems for electricity generation.",
+        "next": { "yes": "es4", "no": "end" }
+      },
+      {
+        "id": "es3",
+        "text": "National grid supply is either unavailable or unreliable",
+        "help": "Assess limitations of the existing electrical grid connection.",
+        "next": { "yes": "rec_grid_connection", "no": "end" }
+      },
+      {
+        "id": "es4",
+        "text": "Is electricity required during hours of darkness?",
+        "help": "Determine if nighttime electricity demand exists at the facility.",
+        "next": { "yes": "rec_battery_installation", "no": "end" }
+      },
+      {
+        "id": "es5",
+        "text": "Reduce electricity demand",
+        "help": "Implement strategies to lower overall electricity consumption.",
+        "next": { "yes": ["es6", "es7", "es8", "es9"], "no": "end" }
+      },
+      {
+        "id": "es6",
+        "text": "Are energy-efficient or passive water heaters used to heat water?",
+        "help": "Assess current water heating systems for energy efficiency.",
+        "next": { "yes": "end", "no": "rec_solar_heaters" }
+      },
+      {
+        "id": "es7",
+        "text": "Are energy-efficient devices used throughout?",
+        "help": "Evaluate if energy-efficient equipment and appliances are in use.",
+        "next": { "yes": "end", "no": "rec_efficient_devices" }
+      },
+      {
+        "id": "es8",
+        "text": "Are electric fans and / or AC systems used to maintain comfortable internal temperatures?",
+        "help": "Assess current cooling strategies and their energy consumption.",
+        "next": { "yes": "rec_temperature_guidance", "no": "end" }
+      },
+      {
+        "id": "es9",
+        "text": "Is refrigeration required?",
+        "help": "Determine if refrigeration is necessary for facility operations.",
+        "next": { "yes": "rec_solar_fridges", "no": "end" }
+      },
+      {
+        "id": "es10",
+        "text": "Is artificial lighting required during daylight hours?",
+        "help": "Evaluate daytime lighting needs and potential natural light utilization.",
+        "next": { "yes": "end", "no": "rec_efficient_lighting" }
+      },
+      {
+        "id": "es11",
+        "text": "Natural lighting is insufficient",
+        "help": "Assess inadequacies in natural lighting within the facility.",
+        "next": { "yes": "es12", "no": "end" }
+      },
+      {
+        "id": "es12",
+        "text": "Can the number, size and location of windows and doors be improved?",
+        "help": "Evaluate potential improvements to fenestration for better daylighting.",
+        "next": { "yes": "rec_window_improvements", "no": "es13" }
+      },
+      {
+        "id": "es13",
+        "text": "Can window reveals and internal walls be painted white?",
+        "help": "Consider light-colored surfaces to enhance light reflection.",
+        "next": { "yes": "rec_white_surfaces", "no": "es14" }
+      },
+      {
+        "id": "es14",
+        "text": "Can light shelves be added?",
+        "help": "Evaluate if light shelves could improve daylight penetration deeper into spaces.",
+        "next": { "yes": "rec_light_shelves", "no": "rec_light_tubes" }
+      },
+      {
+        "id": "es15",
+        "text": "Glare is a problem",
+        "help": "Assess issues with excessive brightness or contrast causing visual discomfort.",
+        "next": { "yes": "es16", "no": "end" }
+      },
+      {
+        "id": "es16",
+        "text": "Does sunlight enter the building through windows?",
+        "help": "Determine if direct sunlight penetration is causing glare issues.",
+        "next": { "yes": "end", "no": "es17" }
+      },
+      {
+        "id": "es17",
+        "text": "Are the windows / sources of light evenly distributed?",
+        "help": "Evaluate the distribution of light sources throughout the space.",
+        "next": { "yes": "end", "no": "es18" }
+      },
+      {
+        "id": "es18",
+        "text": "Are there reflective / white surfaces next to the building?",
+        "help": "Identify if external reflective surfaces are contributing to glare problems.",
+        "next": { "yes": "rec_change_surfaces", "no": "end" }
+      }
+    ],
+    "air-quality": [
+      {
+        "id": "aq1",
+        "text": "Outdoor air quality is poor",
+        "help": "Assess external air quality issues affecting the facility.",
+        "next": { "yes": "aq2", "no": "end" }
+      },
+      {
+        "id": "aq2",
+        "text": "Source of air pollution are outside of the boundary of the facility site?",
+        "help": "Determine if air pollution originates from beyond the site boundaries.",
+        "next": { "yes": "aq3", "no": "aq4" }
+      },
+      {
+        "id": "aq3",
+        "text": "Exhaust from generators / sources of outdoor air pollution contribute to poor air quality",
+        "help": "Identify specific external pollution sources affecting air quality.",
+        "next": { "yes": "aq5", "no": "aq6" }
+      },
+      {
+        "id": "aq4",
+        "text": "Generator self-required to operate facility?",
+        "help": "Determine if on-site generators are necessary for facility operations.",
+        "next": { "yes": "aq7", "no": "end" }
+      },
+      {
+        "id": "aq5",
+        "text": "Fumes from generators / sources of outdoor air pollution contribute to poor air quality",
+        "help": "Assess the impact of exhaust fumes from generators or other external sources.",
+        "next": { "yes": "end", "no": "rec_relocate_generator" }
+      },
+      {
+        "id": "aq6",
+        "text": "Can screens / trees be added to protect the facility from sources of air pollution?",
+        "help": "Evaluate if natural barriers can help filter or block air pollutants.",
+        "next": { "yes": "rec_screens_trees", "no": "rec_system_change" }
+      },
+      {
+        "id": "aq7",
+        "text": "Generator self-required to operate facility?",
+        "help": "Determine if on-site generators are necessary for facility operations.",
+        "next": { "yes": "aq8", "no": "end" }
+      },
+      {
+        "id": "aq8",
+        "text": "Install generator with better air quality output",
+        "help": "Consider upgrading to generators with cleaner emissions.",
+        "next": { "yes": "end", "no": "rec_relocate_generator" }
+      },
+      {
+        "id": "aq9",
+        "text": "Indoor air quality is poor",
+        "help": "Assess internal air quality issues within the facility.",
+        "next": { "yes": "aq10", "no": "end" }
+      },
+      {
+        "id": "aq10",
+        "text": "The source of poor quality air is external",
+        "help": "Determine if poor indoor air quality stems from external sources.",
+        "next": { "yes": "end", "no": "aq11" }
+      },
+      {
+        "id": "aq11",
+        "text": "Air quality is affected by WASH facilities?",
+        "help": "Assess if water, sanitation, and hygiene facilities are contributing to air quality issues.",
+        "next": { "yes": "rec_improve_ventilation", "no": "aq12" }
+      },
+      {
+        "id": "aq12",
+        "text": "Poor air quality is due to build-up of CO2?",
+        "help": "Determine if carbon dioxide buildup from occupants is the main air quality concern.",
+        "next": { "yes": "rec_improve_air_movement", "no": "aq13" }
+      },
+      {
+        "id": "aq13",
+        "text": "Poor air quality is due to internal man-made building materials?",
+        "help": "Identify if building materials are off-gassing and affecting air quality.",
+        "next": { "yes": "rec_replace_materials", "no": "aq14" }
+      },
+      {
+        "id": "aq14",
+        "text": "Poor air quality is due to dampness and mold?",
+        "help": "Assess if moisture issues are causing mold and affecting air quality.",
+        "next": { "yes": "rec_remove_materials", "no": "end" }
+      },
+      {
+        "id": "aq15",
+        "text": "Is external air quality the same throughout the site?",
+        "help": "Determine if air quality varies across different areas of the site.",
+        "next": { "yes": "end", "no": "aq16" }
+      },
+      {
+        "id": "aq16",
+        "text": "Supply for ventilation and cooling system at the part of building with 'cleaner' air",
+        "help": "Consider strategic placement of ventilation intakes in areas with better air quality.",
+        "next": { "yes": "end", "no": "rec_air_filtration" }
+      }
+    ],
+    "recommendations": {
+      "rec_make_accessible": {
+        "text": "Make water source accessible. Ensure the backup water supply can be easily accessed when needed.",
+        "icon": "💧",
+        "final": true
+      },
+      "rec_drill_borehole": {
+        "text": "Drill borehole to access groundwater. This provides a reliable water source independent of municipal supply.",
+        "icon": "⚙️",
+        "final": true
+      },
+      "rec_increase_storage": {
+        "text": "Increase water storage capacity. Install additional tanks to store water when it's available for use during periods of shortage.",
+        "icon": "🏺",
+        "final": true
+      },
+      "rec_reduce_flush": {
+        "text": "Reduce flush capacity. Install water-saving devices in toilet cisterns to reduce water usage per flush.",
+        "icon": "🚽",
+        "final": true
+      },
+      "rec_composting_toilets": {
+        "text": "Install composting toilets to reduce water demands. These systems require little to no water and can provide fertilizer for non-food plants.",
+        "icon": "♻️",
+        "final": true
+      },
+      "rec_grey_water": {
+        "text": "Install grey water recycling system. Reuse water from handwashing and other clean sources for irrigation.",
+        "icon": "💧",
+        "final": true
+      },
+      "rec_plant_vegetation": {
+        "text": "Plant drought-resistant vegetation and trees to prevent soil erosion within the site. This will stabilize the soil and reduce dust while ensuring ventilation and cooling aren't affected.",
+        "icon": "🌳",
+        "final": true
+      },
+      "rec_external_screen": {
+        "text": "Install external screens or barriers to shield buildings from dust source. This could include fencing with climbing plants or purpose-built dust screens.",
+        "icon": "🏢",
+        "final": true
+      },
+      "rec_infrastructure": {
+        "text": "Invest in infrastructure adjacent to site - e.g., paving dirt roads, planting vegetation buffers, or installing dust suppression systems.",
+        "icon": "🛣️",
+        "final": true
+      },
+      "rec_ventilation_openings": {
+        "text": "Amend or add openings to allow ventilation while preventing dust entry. Install screened windows or vents positioned to maximize airflow while minimizing dust infiltration.",
+        "icon": "💨",
+        "final": true
+      },
+      "rec_ac_systems": {
+        "text": "Consider installation of AC systems to maintain comfortable temperatures while keeping windows closed during dusty periods.",
+        "icon": "❄️",
+        "final": true
+      },
+      "rec_artificial_lighting": {
+        "text": "Increase artificial lighting. Install energy-efficient lighting systems to compensate for closed windows during dusty periods.",
+        "icon": "💡",
+        "final": true
+      },
+      "rec_heat_wall_facing": {
+        "text": "Consider heat reflection materials for wall and wall facing areas",
+        "icon": "🔆",
+        "final": true
+      },
+      "rec_off_setting": {
+        "text": "Off-setting structure",
+        "icon": "🏗️",
+        "final": true
+      },
+      "rec_additional_structure": {
+        "text": "Additional structure (beams required)",
+        "icon": "🏢",
+        "final": true
+      },
+      "rec_check_ventilation": {
+        "text": "Check ventilation for issues",
+        "icon": "💨",
+        "final": true
+      },
+      "rec_check_natural_light": {
+        "text": "Check natural light levels",
+        "icon": "☀️",
+        "final": true
+      },
+      "rec_paint_ceiling": {
+        "text": "Add ceiling at high level with insulation on top",
+        "icon": "🖌️",
+        "final": true
+      },
+      "rec_add_vents": {
+        "text": "Add vents in ceiling",
+        "icon": "💨",
+        "final": true
+      },
+      "rec_repair_ceiling": {
+        "text": "Repair/replace damaged ceiling",
+        "icon": "🔧",
+        "final": true
+      },
+      "rec_cool_roof": {
+        "text": "Cool roof shingles/sheet metal/white painted galvanized",
+        "icon": "❄️",
+        "final": true
+      },
+      "rec_ventilate_roof": {
+        "text": "Ventilate roof (lift ridge tiles out of mortar)",
+        "icon": "💨",
+        "final": true
+      },
+      "rec_insulate_roof": {
+        "text": "Insulate roof: sheep's wool or recycled plastic or straw",
+        "icon": "🧠",
+        "final": true
+      },
+      "rec_roof_monitor": {
+        "text": "Roof monitor / ventilator / monitor roof",
+        "icon": "🏢",
+        "final": true
+      },
+      "rec_storm_roof": {
+        "text": "Re-build roof with particular attention to truss design and roofage",
+        "icon": "🏗️",
+        "final": true
+      },
+      "rec_rotten_roof": {
+        "text": "Re-build roof with particular attention to preventing rafter ingress",
+        "icon": "🏗️",
+        "final": true
+      },
+      "rec_disrepaired_roof": {
+        "text": "Re-build roof with particular attention to weathering exposure",
+        "icon": "🏗️",
+        "final": true
+      },
+      "rec_insect_roof": {
+        "text": "Re-build roof with particular attention to tying down and fixings",
+        "icon": "🏗️",
+        "final": true
+      },
+      "rec_treatment_roof": {
+        "text": "Re-build roof with particular attention to treating wood and fixings",
+        "icon": "🏗️",
+        "final": true
+      },
+      "rec_lesson_failure": {
+        "text": "Go to 'Lesson for failure'",
+        "icon": "📚",
+        "final": true
+      },
+      "rec_replace_sheets": {
+        "text": "Replace roof sheets",
+        "icon": "🔧",
+        "final": true
+      },
+      "rec_reposition_sheets": {
+        "text": "Re-position sheets with overlap of at least 6\" (150mm)",
+        "icon": "🔧",
+        "final": true
+      },
+      "rec_correct_structure": {
+        "text": "Correct structure to increase gradient to at least 20 degrees",
+        "icon": "🏗️",
+        "final": true
+      },
+      "rec_replace_ridge": {
+        "text": "Replace ridge pieces",
+        "icon": "🔧",
+        "final": true
+      },
+      "rec_replace_washers": {
+        "text": "Replace rubber washers or nails",
+        "icon": "🔧",
+        "final": true
+      },
+      "rec_extend_roof": {
+        "text": "Extend roof overhangs",
+        "icon": "🏠",
+        "final": true
+      },
+      "rec_add_awnings": {
+        "text": "Add awnings to windows (where applied as may)",
+        "icon": "🪟",
+        "final": true
+      },
+      "rec_add_sill": {
+        "text": "Add / improve window sills",
+        "icon": "🪟",
+        "final": true
+      },
+      "rec_add_step": {
+        "text": "Add step",
+        "icon": "🪜",
+        "final": true
+      },
+      "rec_add_drainage": {
+        "text": "Add drain to protect / slope in front of doors draining away from door / building",
+        "icon": "🌊",
+        "final": true
+      },
+      "rec_terminal_drainage": {
+        "text": "Terminal drainage channels at the site boundaries to point water flow away",
+        "icon": "🌊",
+        "final": true
+      },
+      "rec_infrastructure_project": {
+        "text": "Larger infrastructure project required adjacent to the site",
+        "icon": "🏗️",
+        "final": true
+      },
+      "rec_rainwater_tank": {
+        "text": "Rainwater collection tank",
+        "icon": "🏺",
+        "final": true
+      },
+      "rec_swaleways": {
+        "text": "Swaleways",
+        "icon": "🌊",
+        "final": true
+      },
+      "rec_improve_drainage": {
+        "text": "Improve drainage channels on site to allow faster run-off",
+        "icon": "🌊",
+        "final": true
+      },
+      "rec_raise_floor": {
+        "text": "Raise floor level",
+        "icon": "🏠",
+        "final": true
+      },
+      "rec_add_floor_drainage": {
+        "text": "Add floor drainage",
+        "icon": "🌊",
+        "final": true
+      },
+      "rec_electrical_protection": {
+        "text": "Move electrical sockets and switches OR build defensive at doorways OR Provision of power boots and floors from wall damage",
+        "icon": "⚡",
+        "final": true
+      },
+      "rec_relocate_source": {
+        "text": "Review location of water source",
+        "icon": "💧",
+        "final": true
+      },
+      "rec_drainage_clearing": {
+        "text": "Drainage system enlarged beneath facility needs to be in place before facility interventions will be effective",
+        "icon": "🌊",
+        "final": true
+      },
+      "rec_waste_system": {
+        "text": "Collection, removal/disposal at suitable time",
+        "icon": "🗑️",
+        "final": true
+      },
+      "rec_increase_capacity": {
+        "text": "Increase capacity of trash cans",
+        "icon": "🗑️",
+        "final": true
+      },
+      "rec_protect_storage": {
+        "text": "Protect storage that is protected from wind, floods and animals",
+        "icon": "🏠",
+        "final": true
+      },
+      "rec_increase_toilet_numbers": {
+        "text": "Increase number of toilets",
+        "icon": "🚽",
+        "final": true
+      },
+      "rec_add_access": {
+        "text": "Add raised access for maintenance vehicle access",
+        "icon": "🛣️",
+        "final": true
+      },
+      "rec_add_capacity": {
+        "text": "Composting toilets",
+        "icon": "♻️",
+        "final": true
+      },
+      "rec_raise_lids": {
+        "text": "Raise lids and manholes covers",
+        "icon": "🔧",
+        "final": true
+      },
+      "rec_early_warning": {
+        "text": "Early warning system: go to recommendations",
+        "icon": "⚠️",
+        "final": true
+      },
+      "rec_signage_escape": {
+        "text": "Signage for escape routes",
+        "icon": "🚶",
+        "final": true
+      },
+      "rec_escape_routes": {
+        "text": "Escape route from buildings to the boundary",
+        "icon": "🚶",
+        "final": true
+      },
+      "rec_air_quality": {
+        "text": "Go to 'Outcome: Air quality poor'",
+        "icon": "💨",
+        "final": true
+      },
+      "rec_buffer_zone": {
+        "text": "Buffer zone?",
+        "icon": "🌳",
+        "final": true
+      },
+      "rec_signage": {
+        "text": "Signage",
+        "icon": "🪧",
+        "final": true
+      },
+      "rec_hardstanding": {
+        "text": "Creation of hardstanding on site",
+        "icon": "🛣️",
+        "final": true
+      },
+      "rec_protect_fuel": {
+        "text": "Flattening with fire-retardant coatings",
+        "icon": "🧯",
+        "final": true
+      },
+      "rec_fire_retardant": {
+        "text": "Flattening with fire-retardant coatings",
+        "icon": "🧯",
+        "final": true
+      },
+      "rec_increase_water_storage": {
+        "text": "Increase water storage",
+        "icon": "🏺",
+        "final": true
+      },
+      "rec_protect_route": {
+        "text": "Protect route to water source",
+        "icon": "🛣️",
+        "final": true
+      },
+      "rec_grid_connection": {
+        "text": "National grid supply is reliable but too expensive to use",
+        "icon": "🔌",
+        "final": true
+      },
+      "rec_battery_installation": {
+        "text": "Battery installation",
+        "icon": "🔋",
+        "final": true
+      },
+      "rec_solar_heaters": {
+        "text": "Solar water heaters",
+        "icon": "☀️",
+        "final": true
+      },
+      "rec_efficient_devices": {
+        "text": "Replace electrical devices for energy efficient models",
+        "icon": "💡",
+        "final": true
+      },
+      "rec_temperature_guidance": {
+        "text": "Follow guidance on 'temperature is a problem'",
+        "icon": "🌡️",
+        "final": true
+      },
+      "rec_solar_fridges": {
+        "text": "Solar fridges",
+        "icon": "❄️",
+        "final": true
+      },
+      "rec_efficient_lighting": {
+        "text": "Layout and energy efficient bulbs and automatic operation",
+        "icon": "💡",
+        "final": true
+      },
+      "rec_window_improvements": {
+        "text": "Window number/size/layout (check against ventilation/cooling/storms)",
+        "icon": "🪟",
+        "final": true
+      },
+      "rec_white_surfaces": {
+        "text": "Internal painting white",
+        "icon": "🖌️",
+        "final": true
+      },
+      "rec_light_shelves": {
+        "text": "Light shelves",
+        "icon": "☀️",
+        "final": true
+      },
+      "rec_light_tubes": {
+        "text": "Light tubes",
+        "icon": "💡",
+        "final": true
+      },
+      "rec_change_surfaces": {
+        "text": "Change surfaces adjacent to buildings",
+        "icon": "🖌️",
+        "final": true
+      },
+      "rec_relocate_generator": {
+        "text": "Relocate generator",
+        "icon": "🔌",
+        "final": true
+      },
+      "rec_screens_trees": {
+        "text": "Screens and trees",
+        "icon": "🌳",
+        "final": true
+      },
+      "rec_system_change": {
+        "text": "System change: (convertible off-site? Flexible collection?)",
+        "icon": "🔄",
+        "final": true
+      },
+      "rec_improve_ventilation": {
+        "text": "Improve ventilation of WASH system",
+        "icon": "💨",
+        "final": true
+      },
+      "rec_improve_air_movement": {
+        "text": "Go to 'Improve air movement'",
+        "icon": "💨",
+        "final": true
+      },
+      "rec_replace_materials": {
+        "text": "Replace man-made materials with natural materials",
+        "icon": "♻️",
+        "final": true
+      },
+      "rec_remove_materials": {
+        "text": "Remove materials that are inappropriate / reduce drying out",
+        "icon": "♻️",
+        "final": true
+      },
+      "rec_air_filtration": {
+        "text": "Filtration of air supply / AC?",
+        "icon": "💨",
+        "final": true
+      },
+      "check_natural_lighting": {
+        "text": "Check natural lighting is maintained",
+        "icon": "☀️",
+        "final": true
+      },
+      "check_ventilation_cooling": {
+        "text": "Check ventilation and cooling requirements",
+        "icon": "💨",
+        "final": true
+      }
+    }
+  }

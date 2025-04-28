@@ -1,0 +1,172 @@
+/* Global styles for CRIBS Assessment Tool */
+
+:root {
+  /* AI-for-Education.org color scheme */
+  --primary-blue: #0066FF;
+  --yellow-orange: #FFC04D;
+  --purple: #9966FF;
+  --coral-orange: #FF7F50;
+  --black: #000000;
+  --white: #FFFFFF;
+  --light-gray: #F5F5F5;
+  --medium-gray: #CCCCCC;
+  --dark-gray: #333333;
+  
+  /* Spacing variables */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-xxl: 3rem;
+  
+  /* Border radius */
+  --border-radius-sm: 4px;
+  --border-radius-md: 8px;
+  --border-radius-lg: 12px;
+  
+  /* Shadows */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.1);
+  
+  /* Transitions */
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.5s ease;
+}
+
+/* Base styles */
+html {
+  box-sizing: border-box;
+  font-size: 16px;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: var(--white);
+  color: var(--dark-gray);
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+  line-height: 1.2;
+  color: var(--black);
+}
+
+p {
+  margin-top: 0;
+}
+
+/* Button styles */
+button {
+  font-family: inherit;
+  font-size: 1rem;
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  transition: background-color var(--transition-normal), transform var(--transition-normal);
+  border: none;
+  font-weight: 500;
+}
+
+button:hover {
+  transform: translateY(-2px);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+.primary-button {
+  background-color: var(--primary-blue);
+  color: var(--white);
+}
+
+.primary-button:hover {
+  background-color: #0052CC; /* Darker blue */
+}
+
+.secondary-button {
+  background-color: var(--white);
+  color: var(--black);
+  border: 1px solid var(--medium-gray);
+}
+
+.secondary-button:hover {
+  background-color: var(--light-gray);
+}
+
+/* Card styles */
+.card {
+  background-color: var(--white);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--spacing-lg);
+}
+
+/* Container styles */
+.container {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: var(--spacing-md);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  html {
+    font-size: 14px;
+  }
+  
+  .container {
+    padding: var(--spacing-sm);
+  }
+}
+
+@media (max-width: 480px) {
+  button {
+    width: 100%;
+    margin-bottom: var(--spacing-sm);
+  }
+}
+
+/* Accessibility */
+:focus {
+  outline: 2px solid var(--primary-blue);
+  outline-offset: 2px;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.fade-in {
+  animation: fadeIn var(--transition-normal);
+}
+
+/* Print styles */
+@media print {
+  body {
+    background-color: var(--white);
+  }
+  
+  button {
+    display: none;
+  }
+  
+  .no-print {
+    display: none;
+  }
+}
