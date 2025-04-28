@@ -5,4 +5,9 @@ import { svelte } from '@sveltejs/vite-plugin-svelte'
 export default defineConfig({
   plugins: [svelte()],
   base: '/school-climate-survey/',
+  server: {
+    headers: {
+      'Content-Type': 'application/javascript; charset=utf-8',
+    },
+  },
 })
