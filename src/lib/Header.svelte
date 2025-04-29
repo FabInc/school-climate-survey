@@ -4,12 +4,20 @@
 
 <header>
   <h1>School Climate Assessment Tool</h1>
-  {#if progress > 0}
-    <div class="progress-bar-container">
-      <div class="progress-bar" style="width: {progress}%;"></div>
-    </div>
-    <span>{progress}% Complete</span>
-  {/if}
+  
+  <div class="actions-container">
+    <!-- Slot for navigation buttons -->
+    <slot></slot>
+    
+    {#if progress > 0}
+      <div class="progress-container">
+        <div class="progress-bar-container">
+          <div class="progress-bar" style="width: {progress}%;"></div>
+        </div>
+        <span>{progress}% Complete</span>
+      </div>
+    {/if}
+  </div>
 </header>
 
 <style lang="css">
@@ -28,8 +36,19 @@
     font-size: 1.5rem;
   }
 
+  .actions-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .progress-container {
+    display: flex;
+    align-items: center;
+  }
+
   .progress-bar-container {
-    width: 200px;
+    width: 150px;
     height: 10px;
     background-color: #FFFFFF; /* White */
     border-radius: 5px;
@@ -44,24 +63,38 @@
   }
 
   span {
-      margin-left: 0.5rem;
-      font-size: 0.9rem;
+    margin-left: 0.5rem;
+    font-size: 0.9rem;
   }
 
   /* Basic responsiveness */
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
     header {
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 1rem;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 1rem;
     }
+    
     h1 {
-        margin-bottom: 0.5rem;
-        font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+      font-size: 1.2rem;
     }
+    
+    .actions-container {
+      flex-direction: column;
+      width: 100%;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+    
+    .progress-container {
+      width: 100%;
+      margin-top: 0.5rem;
+    }
+    
     .progress-bar-container {
-        width: 100%;
-        margin-left: 0;
+      width: 100%;
+      margin-left: 0;
     }
   }
 </style>

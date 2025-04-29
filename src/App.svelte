@@ -6,11 +6,12 @@
   import QuestionCard from './lib/QuestionCard.svelte';
   import ResultsDisplay from './lib/ResultsDisplay.svelte';
   import FlowchartVisualization from './lib/FlowchartVisualization.svelte';
+  import FlowchartEditor from './lib/FlowchartEditor.svelte';
   import { flowchartData, getNextStep, getFirstQuestion } from './lib/flowchartLogic.js';
   import { downloadPDF } from './lib/ExportResults.js'; // Import PDF export function
 
   // Application State
-  let currentScreen = 'welcome'; // welcome, categories, branches, question, results, visualization
+  let currentScreen = 'welcome'; // welcome, categories, branches, question, results, visualization, editor
   let currentCategory = null;
   let currentBranch = null;
   let currentQuestionData = {};
@@ -388,19 +389,49 @@
       currentScreen = 'visualization';
     }
   }
+
+  function gotoEditor() {
+    currentScreen = 'editor';
+  }
 </script>
 
-<Header progress={currentProgress} />
+<Header progress={currentProgress}>
+  {#if currentScreen !== 'welcome' && currentScreen !== 'editor'}
+    <button 
+      class="mr-2 text-sm px-3 py-1 rounded-lg bg-gray-200 hover:bg-gray-300"
+      on:click={() => currentScreen = 'welcome'}
+    >
+      ← Start Over
+    </button>
+  {/if}
 
-<!-- Mode toggle button -->
-<div class="container px-4 mt-2">
-  <button 
-    class="px-3 py-1 text-sm bg-gray-200 hover:bg-gray-300 rounded transition-colors"
-    on:click={toggleVisualization}
-  >
-    {currentScreen === 'visualization' ? 'Switch to Questionnaire' : 'View Decision Trees'}
-  </button>
-</div>
+  {#if currentScreen !== 'visualization' && currentScreen !== 'editor'}
+    <button 
+      class="mr-2 text-sm px-3 py-1 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-700"
+      on:click={() => currentScreen = 'visualization'}
+    >
+      View Flowchart
+    </button>
+  {/if}
+
+  {#if currentScreen !== 'editor'}
+    <button 
+      class="text-sm px-3 py-1 rounded-lg bg-purple-100 hover:bg-purple-200 text-purple-700"
+      on:click={gotoEditor}
+    >
+      Edit Flowchart
+    </button>
+  {/if}
+
+  {#if currentScreen === 'editor'}
+    <button 
+      class="text-sm px-3 py-1 rounded-lg bg-gray-200 hover:bg-gray-300"
+      on:click={() => currentScreen = 'welcome'}
+    >
+      Exit Editor
+    </button>
+  {/if}
+</Header>
 
 {#key currentScreen}
 <main class="container fade-in">
@@ -435,6 +466,10 @@
     />
   {:else if currentScreen === 'visualization'}
     <FlowchartVisualization />
+  {:else if currentScreen === 'editor'}
+    <div class="container mx-auto px-4 py-8">
+      <FlowchartEditor />
+    </div>
   {/if}
 </main>
 {/key}

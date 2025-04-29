@@ -11,7 +11,7 @@
         "text": "Is there a back-up water supply nearby that can be made accessible?",
         "help": "Is there an alternative water source (like a municipal connection, another well, or water delivery service) that could be accessed?",
         "next": { "yes": "rec_make_accessible", "no": "rec_drill_borehole" }
-      },
+      },  
       {
         "id": "ws4",
         "text": "Water supply meets demand (quantity of water) but isn't available from the source or the times when it's required?",
@@ -80,7 +80,7 @@
     "heat-impacts": [
       {
         "id": "hi1",
-        "text": "Direct sunlight on walls?",
+        "text": "Is there direct sunlight on walls?",
         "help": "Assess if direct sunlight hitting the exterior walls of the building is contributing to heat gain.",
         "next": { "yes": ["hi2", "hi3"], "no": "end" }
       },
