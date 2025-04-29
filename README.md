@@ -1,47 +1,78 @@
-# Svelte + Vite
+# School Climate Intervention Survey
 
-This template should help get you started developing with Svelte in Vite.
+A web application built with Svelte and Vite to guide users through decision trees related to school facility climate resilience, providing relevant recommendations based on their answers.
+
+The application's logic is driven by a central JSON data file (`src/lib/flowchartData.json`). This file defines the structure of the decision trees for various climate-related categories.
+
+*   **Categories:** The top level organizes flowcharts by categories (e.g., `water-supply`, `heat-impacts`).
+*   **Nodes:** Each category contains an array of nodes. Each node represents either a decision point (question) or a final recommendation.
+*   **Questions:** Decision nodes contain question text (`text`), optional help text (`help`), and a `next` object mapping user answers (e.g., "Yes", "No") to the ID of the subsequent node or recommendation.
+*   **Recommendations:** Recommendation nodes contain the recommendation text (`text`), an icon (`icon`), and a flag indicating if it's a final step (`final: true`). Shared recommendations are defined in a separate `recommendations` key within the JSON.
+*   **Flow:** The Svelte application reads this JSON data. Starting from an initial node (often determined by category/branch selection), it displays the question (`QuestionCard.svelte`), waits for user input, uses the `next` mapping to find the ID of the next step based on the answer, and dynamically renders the next question or displays the final recommendation (`ResultsDisplay.svelte`). The visualization (`FlowchartVisualization.svelte`, `DecisionNode.svelte`) also uses this data to render the tree structure.
+*   **Editing:** The application includes a built-in editor (`FlowchartEditor.svelte`, `NodeEditor.svelte`, `RecommendationEditor.svelte`) which allows users to visually modify the flowchart structure. This includes adding, editing, or deleting categories, questions (nodes), answers, recommendations, and changing the navigation flow between them. *([Optional: Add specific instructions here on how to access the editor if known, e.g., "Accessed via the '/editor' route"])*. Changes made in the editor directly update the underlying flowchart data structure.
+
+
+
+
+
 
 ## Recommended IDE Setup
 
-[VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode).
+[VS Code](https://code.visualstudio.com/) + [Svelte Extension](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode).
 
-## Need an official Svelte framework?
+## Technologies Used
 
-Check out [SvelteKit](https://github.com/sveltejs/kit#readme), which is also powered by Vite. Deploy anywhere with its serverless-first approach and adapt to various platforms, with out of the box support for TypeScript, SCSS, and Less, and easily-added support for mdsvex, GraphQL, PostCSS, Tailwind CSS, and more.
+*   [Svelte 5](https://svelte.dev/)
+*   [Vite](https://vitejs.dev/)
+*   [Tailwind CSS v3](https://tailwindcss.com/)
+*   [jsPDF](https://github.com/parallax/jsPDF) & [jspdf-autotable](https://github.com/simonbengtsson/jsPDF-AutoTable) (for PDF export)
 
-## Technical considerations
+## Prerequisites
 
-**Why use this over SvelteKit?**
+*   [Node.js](https://nodejs.org/) - **LTS version is recommended** (Developed using v20.17.0). Download from the official Node.js website.
 
-- It brings its own routing solution which might not be preferable for some users.
-- It is first and foremost a framework that just happens to use Vite under the hood, not a Vite app.
+## Installation
 
-This template contains as little as possible to get started with Vite + Svelte, while taking into account the developer experience with regards to HMR and intellisense. It demonstrates capabilities on par with the other `create-vite` templates and is a good starting point for beginners dipping their toes into a Vite + Svelte project.
+1.  **Clone the repository (if you haven't already):**
+    ```bash
+    git clone <your-repository-url>
+    cd climate_miro/cribs-app
+    ```
+    *(Replace `<your-repository-url>` with the actual URL if cloning)*
 
-Should you later need the extended capabilities and extensibility provided by SvelteKit, the template has been structured similarly to SvelteKit so that it is easy to migrate.
+2.  **Install dependencies:** Open your terminal in the `cribs-app` directory and run:
+    ```bash
+    npm install
+    ```
+    *   **Windows Note:** If you encounter errors during installation (especially related to permissions or missing files in `node_modules/.bin`), try opening your terminal (e.g., PowerShell or Command Prompt) **"as Administrator"** and running `npm install` again after cleaning up:
+        ```powershell
+        # Run these in an Administrator terminal if npm install fails
+        Remove-Item -Recurse -Force node_modules
+        Remove-Item -Force package-lock.json
+        npm install
+        ```
+        Ensure any running development servers are stopped before attempting installation. Antivirus software might also interfere; consider adding the project folder and Node.js executables to your exclusion list if problems persist.
 
-**Why `global.d.ts` instead of `compilerOptions.types` inside `jsconfig.json` or `tsconfig.json`?**
+## Running the Development Server
 
-Setting `compilerOptions.types` shuts out all other types not explicitly listed in the configuration. Using triple-slash references keeps the default TypeScript setting of accepting type information from the entire workspace, while also adding `svelte` and `vite/client` type information.
+1.  Open your terminal in the `cribs-app` directory.
+2.  Run the development server:
+    ```bash
+    npm run dev
+    ```
+3.  Open your web browser and navigate to the local URL provided by Vite (usually `http://localhost:5173` or the next available port).
 
-**Why include `.vscode/extensions.json`?**
+The application will automatically reload as you make changes to the source files.
 
-Other templates indirectly recommend extensions via the README, but this file allows VS Code to prompt the user to install the recommended extension upon opening the project.
+## Building for Production
 
-**Why enable `checkJs` in the JS template?**
+1.  Open your terminal in the `cribs-app` directory.
+2.  Run the build command:
+    ```bash
+    npm run build
+    ```
+3.  This will create a production-ready build of the application in the `docs/` directory (configured for GitHub Pages deployment).
 
-It is likely that most cases of changing variable types in runtime are likely to be accidental, rather than deliberate. This provides advanced typechecking out of the box. Should you like to take advantage of the dynamically-typed nature of JavaScript, it is trivial to change the configuration.
+## Deployment
 
-**Why is HMR not preserving my local component state?**
-
-HMR state preservation comes with a number of gotchas! It has been disabled by default in both `svelte-hmr` and `@sveltejs/vite-plugin-svelte` due to its often surprising behavior. You can read the details [here](https://github.com/sveltejs/svelte-hmr/tree/master/packages/svelte-hmr#preservation-of-local-state).
-
-If you have state that's important to retain within a component, consider creating an external store which would not be replaced by HMR.
-
-```js
-// store.js
-// An extremely simple external store
-import { writable } from 'svelte/store'
-export default writable(0)
-```
+This project is configured for deployment to GitHub Pages via a GitHub Actions workflow (`.github/workflows/deploy.yml`). Pushing changes to the `main` branch will automatically trigger the build process and deploy the contents of the `docs/` directory to the `gh-pages` branch.
