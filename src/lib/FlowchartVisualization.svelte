@@ -30,10 +30,15 @@
   // Handle node expansion
   function handleToggleNode(event) {
     const { nodeId } = event.detail;
+    console.log('Handling toggle node:', nodeId, 'Current state:', expandedNodes[nodeId]);
+    
+    // Create a new object to ensure reactivity
     expandedNodes = {
       ...expandedNodes,
       [nodeId]: !expandedNodes[nodeId]
     };
+    
+    console.log('Updated expandedNodes:', expandedNodes, 'New state for', nodeId, ':', !expandedNodes[nodeId]);
   }
 
   // Handle tooltip event from child component
