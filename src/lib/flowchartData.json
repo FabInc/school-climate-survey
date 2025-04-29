@@ -591,6 +591,32 @@
         "next": { "yes": "rec_change_surfaces", "no": "end" }
       }
     ],
+    "rain-noise": [
+      {
+        "id": "rn1",
+        "text": "Does the noise from rain make the buildings unusable during rainy season / storms?",
+        "help": "Assess if the sound of rain inside the buildings is disruptive to the point of making them unusable.",
+        "next": { "yes": "rn2", "no": "end" }
+      },
+      {
+        "id": "rn2",
+        "text": "Do the buildings have insulated ceilings?",
+        "help": "Check if there are insulated ceilings installed in the buildings.",
+        "next": { "yes": "rn3", "no": "rec_add_insulated_ceilings" }
+      },
+      {
+        "id": "rn3",
+        "text": "Can car-parking and any other metal structures be moved away from the buildings?",
+        "help": "Evaluate if it's feasible to relocate car parking areas and other metal structures that might amplify rain noise away from the main buildings.",
+        "next": { "yes": "rec_rearrange_site_layout", "no": "rn4" }
+      },
+      {
+        "id": "rn4",
+        "text": "Are there hard surfaces next to buildings (for example concrete, tarmac) that can be replaced?",
+        "help": "Identify if hard ground surfaces like concrete or tarmac adjacent to the buildings could be replaced with softer, less reflective materials.",
+        "next": { "yes": "rec_replace_hard_surfaces", "no": "end" }
+      }
+    ],
     "air-quality": [
       {
         "id": "aq1",
@@ -1138,6 +1164,21 @@
       "check_ventilation_cooling": {
         "text": "Check ventilation and cooling requirements",
         "icon": "💨",
+        "final": true
+      },
+      "rec_add_insulated_ceilings": {
+        "text": "Add insulated ceilings.",
+        "icon": "🏠",
+        "final": true
+      },
+      "rec_rearrange_site_layout": {
+        "text": "Re-arrange site layout with car-parking facilities and metal structures away from main buildings.",
+        "icon": "🗺️",
+        "final": true
+      },
+      "rec_replace_hard_surfaces": {
+        "text": "Replace hard ground surfaces with softer surfaces and vegetation.",
+        "icon": "🌳",
         "final": true
       }
     }

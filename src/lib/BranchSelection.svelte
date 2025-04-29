@@ -17,7 +17,8 @@
     'flood-management': 'Flood Management',
     'wildfire-impacts': 'Wildfire Impacts',
     'electricity-supply': 'Electricity Supply',
-    'air-quality': 'Air Quality'
+    'air-quality': 'Air Quality',
+    'rain-noise': 'Rain Noise Issues'
   };
   
   function selectBranch(branchId) {

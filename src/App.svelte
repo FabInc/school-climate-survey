@@ -182,6 +182,14 @@
         description: 'Improve indoor air quality within the facility.',
         startQuestionId: 'aq9'
       }
+    ],
+    'rain-noise': [
+      {
+        id: 'rn-building',
+        title: 'Rain Noise Impact',
+        description: 'Assess and mitigate the impact of rain noise on buildings',
+        startQuestionId: 'rn1'
+      }
     ]
   };
   

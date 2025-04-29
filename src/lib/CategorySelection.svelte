@@ -12,7 +12,8 @@
     'flood-management': '🌊',
     'wildfire-impacts': '🔥',
     'electricity-supply': '⚡',
-    'air-quality': '🌬️'
+    'air-quality': '🌬️',
+    'rain-noise': '🔊'
   };
   
   const categoryTitles = {
@@ -24,7 +25,8 @@
     'flood-management': 'Flood Management',
     'wildfire-impacts': 'Wildfire Impacts',
     'electricity-supply': 'Electricity Supply',
-    'air-quality': 'Air Quality'
+    'air-quality': 'Air Quality',
+    'rain-noise': 'Rain Noise Issues'
   };
   
   const categoryDescriptions = {
@@ -36,7 +38,8 @@
     'flood-management': 'Manage flood risks and mitigation strategies.',
     'wildfire-impacts': 'Assess wildfire risks and protection measures.',
     'electricity-supply': 'Evaluate electricity supply and consumption.',
-    'air-quality': 'Address indoor and outdoor air quality issues.'
+    'air-quality': 'Address indoor and outdoor air quality issues.',
+    'rain-noise': 'Evaluate and mitigate noise from rain impacting building usability.'
   };
   
   // Generate categories array from flowchartData keys
