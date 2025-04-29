@@ -5,11 +5,12 @@
   import BranchSelection from './lib/BranchSelection.svelte';
   import QuestionCard from './lib/QuestionCard.svelte';
   import ResultsDisplay from './lib/ResultsDisplay.svelte';
+  import FlowchartVisualization from './lib/FlowchartVisualization.svelte';
   import { flowchartData, getNextStep, getFirstQuestion } from './lib/flowchartLogic.js';
   import { downloadPDF } from './lib/ExportResults.js'; // Import PDF export function
 
   // Application State
-  let currentScreen = 'welcome'; // welcome, categories, branches, question, results
+  let currentScreen = 'welcome'; // welcome, categories, branches, question, results, visualization
   let currentCategory = null;
   let currentBranch = null;
   let currentQuestionData = {};
@@ -376,9 +377,30 @@
       currentProgress = 0;
     }
   }
+  
+  // Toggle visualization mode
+  function toggleVisualization() {
+    if (currentScreen === 'visualization') {
+      // Return to the previous screen or categories
+      currentScreen = 'categories';
+    } else {
+      // Go to visualization
+      currentScreen = 'visualization';
+    }
+  }
 </script>
 
 <Header progress={currentProgress} />
+
+<!-- Mode toggle button -->
+<div class="container px-4 mt-2">
+  <button 
+    class="px-3 py-1 text-sm bg-gray-200 hover:bg-gray-300 rounded transition-colors"
+    on:click={toggleVisualization}
+  >
+    {currentScreen === 'visualization' ? 'Switch to Questionnaire' : 'View Decision Trees'}
+  </button>
+</div>
 
 {#key currentScreen}
 <main class="container fade-in">
@@ -411,6 +433,8 @@
       on:branches={handleGoToBranches}
       on:export={handleExport} 
     />
+  {:else if currentScreen === 'visualization'}
+    <FlowchartVisualization />
   {/if}
 </main>
 {/key}
