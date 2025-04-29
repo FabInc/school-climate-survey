@@ -1,48 +1,48 @@
 <script>
   import { createEventDispatcher } from 'svelte';
+  import { generateId } from './utils.js';
   
   export let recommendation;
-  export let recommendationId;
-  export let allRecommendations = {};
+  export let category;
+  export let allRecommendations = [];
+  
+  // Make deep copy to avoid modifying parent's recommendation directly
+  let workingRec = JSON.parse(JSON.stringify(recommendation));
+  let recIdError = '';
   
   const dispatch = createEventDispatcher();
   
-  // Deep copy to avoid direct mutation
-  let editedRecommendation = recommendation 
-    ? JSON.parse(JSON.stringify(recommendation)) 
-    : { text: '', icon: '💡', final: true };
-  
-  let editedId = recommendationId || '';
-  
-  // Common emoji options for recommendations
-  const commonEmojis = [
-    '💧', '🚰', '🌊', '🚿', '🚽', '♻️', '🏭', 
-    '🌡️', '❄️', '🔥', '💨', '☁️', '🌤️', 
-    '🌧️', '⚡', '🔌', '🔋', '💡', '🔍', 
-    '🏠', '🏢', '🏫', '🏥', '🛠️', '🔧', 
-    '🧰', '📝', '📋', '⚠️', '🚨', '🚫'
-  ];
-  
-  function generateRecommendationId() {
-    // Find highest rec_XX number
-    const recIds = Object.keys(allRecommendations)
-      .filter(id => id.startsWith('rec_'))
-      .map(id => {
-        const num = parseInt(id.replace('rec_', ''), 10);
-        return isNaN(num) ? 0 : num;
-      });
+  function validateRecId(id) {
+    if (!id.trim()) {
+      return 'Recommendation ID is required';
+    }
     
-    const maxId = recIds.length > 0 ? Math.max(...recIds) : 0;
-    return `rec_${maxId + 1}`;
+    // Check if ID is already being used by another recommendation
+    const isExistingRec = allRecommendations.some(r => r.id === id && r.id !== recommendation.id);
+    if (isExistingRec) {
+      return 'This Recommendation ID is already in use';
+    }
+    
+    return '';
   }
   
-  function saveChanges() {
-    // Use provided ID or generate a new one if creating new recommendation
-    const finalId = editedId || generateRecommendationId();
+  function saveRecommendation() {
+    const updatedId = workingRec.id || generateId(`${category}-rec`);
+    recIdError = validateRecId(updatedId);
     
-    dispatch('save', { 
-      recommendationId: finalId,
-      updatedRecommendation: editedRecommendation
+    if (recIdError) {
+      return;
+    }
+    
+    // Add ID to the working copy if it's a new recommendation
+    if (!workingRec.id) {
+      workingRec.id = updatedId;
+    }
+    
+    dispatch('save', {
+      category,
+      recId: recommendation.id,
+      updatedRecommendation: workingRec
     });
   }
   
@@ -51,83 +51,107 @@
   }
 </script>
 
-<div class="bg-white p-4 rounded-lg shadow-lg max-w-2xl mx-auto">
-  <h3 class="text-lg font-semibold mb-4">
-    {recommendationId ? 'Edit Recommendation' : 'Create New Recommendation'}
-  </h3>
-  
-  <div class="mb-4">
-    <label class="block text-sm font-medium mb-1">Recommendation ID</label>
-    <input 
-      type="text" 
-      bind:value={editedId} 
-      class="w-full p-2 border rounded"
-      disabled={!!recommendationId} 
-      placeholder={recommendationId ? '' : generateRecommendationId()}
-    />
-    {#if !recommendationId}
-      <p class="text-xs text-gray-500 mt-1">ID will be auto-generated if left blank (format: rec_XX)</p>
-    {/if}
+<div class="editor-panel">
+  <div class="editor-panel-header">
+    <h2 class="editor-panel-title">{recommendation.id ? 'Edit Recommendation' : 'New Recommendation'}</h2>
   </div>
   
-  <div class="mb-4">
-    <label class="block text-sm font-medium mb-1">Recommendation Text</label>
-    <textarea 
-      bind:value={editedRecommendation.text} 
-      class="w-full p-2 border rounded"
-      rows="3"
-      placeholder="Enter the recommendation text"
-    ></textarea>
-  </div>
-  
-  <div class="mb-4">
-    <label class="block text-sm font-medium mb-1">Icon</label>
-    <div class="flex flex-wrap gap-2 mb-2 p-2 border rounded bg-gray-50">
-      {#each commonEmojis as emoji}
-        <button 
-          class="w-8 h-8 flex items-center justify-center rounded {editedRecommendation.icon === emoji ? 'bg-blue-100 ring-2 ring-blue-500' : 'hover:bg-gray-200'}"
-          on:click={() => editedRecommendation.icon = emoji}
-        >
-          {emoji}
-        </button>
-      {/each}
-    </div>
-    <div class="flex items-center gap-2">
-      <span class="text-sm">Custom:</span>
+  <div class="editor-panel-body">
+    <div class="form-group">
+      <label for="rec-id" class="form-label">Recommendation ID</label>
       <input 
         type="text" 
-        bind:value={editedRecommendation.icon} 
-        class="p-2 border rounded w-20 text-center text-lg"
-        maxlength="2"
+        id="rec-id" 
+        placeholder="Enter recommendation ID or leave blank to auto-generate"
+        bind:value={workingRec.id}
+        class="form-input {recIdError ? 'error' : ''}"
       />
-      <span class="text-xs text-gray-500">Emoji or 1-2 character symbol</span>
+      {#if recIdError}
+        <div class="form-error">{recIdError}</div>
+      {/if}
+    </div>
+    
+    <div class="form-group">
+      <label for="rec-text" class="form-label">Recommendation Text</label>
+      <textarea 
+        id="rec-text" 
+        placeholder="Enter the recommendation text"
+        bind:value={workingRec.text}
+        class="form-textarea"
+        rows="6"
+      ></textarea>
+    </div>
+    
+    <div class="form-group">
+      <label for="rec-description" class="form-label">Description (Optional)</label>
+      <textarea 
+        id="rec-description" 
+        placeholder="Enter additional details about this recommendation"
+        bind:value={workingRec.description}
+        class="form-textarea"
+        rows="4"
+      ></textarea>
+    </div>
+    
+    <div class="form-group">
+      <label for="rec-reference" class="form-label">Reference (Optional)</label>
+      <input 
+        type="text" 
+        id="rec-reference" 
+        placeholder="Enter any reference information"
+        bind:value={workingRec.reference}
+        class="form-input"
+      />
+    </div>
+    
+    <div class="form-group">
+      <label class="form-label">Priority</label>
+      <div class="radio-group">
+        <label class="radio-label">
+          <input 
+            type="radio" 
+            name="priority" 
+            value="high" 
+            bind:group={workingRec.priority}
+          />
+          <span class="radio-text priority-high">High</span>
+        </label>
+        
+        <label class="radio-label">
+          <input 
+            type="radio" 
+            name="priority" 
+            value="medium" 
+            bind:group={workingRec.priority}
+          />
+          <span class="radio-text priority-medium">Medium</span>
+        </label>
+        
+        <label class="radio-label">
+          <input 
+            type="radio" 
+            name="priority" 
+            value="low" 
+            bind:group={workingRec.priority}
+          />
+          <span class="radio-text priority-low">Low</span>
+        </label>
+      </div>
     </div>
   </div>
   
-  <div class="mb-4">
-    <label class="flex items-center">
-      <input 
-        type="checkbox" 
-        bind:checked={editedRecommendation.final} 
-        class="mr-2"
-      />
-      <span class="text-sm font-medium">This is a final recommendation (end of path)</span>
-    </label>
-  </div>
-  
-  <div class="flex justify-end gap-2 mt-6">
+  <div class="editor-panel-footer">
     <button 
       on:click={cancel}
-      class="px-4 py-2 border rounded hover:bg-gray-100"
+      class="action-button secondary-button"
     >
       Cancel
     </button>
     <button 
-      on:click={saveChanges}
-      class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-      disabled={!editedRecommendation.text}
+      on:click={saveRecommendation}
+      class="action-button primary-button"
     >
-      Save Changes
+      Save
     </button>
   </div>
 </div> 

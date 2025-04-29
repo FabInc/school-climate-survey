@@ -17,6 +17,7 @@
   } from './flowchartStore.js';
   import NodeEditor from './NodeEditor.svelte';
   import RecommendationEditor from './RecommendationEditor.svelte';
+  import './editor-styles.css';
   
   let activeCategory = null;
   let editingNode = null;
@@ -103,7 +104,8 @@
   function startEditingRecommendation(id, recommendation) {
     editingRecommendation = {
       recommendationId: id,
-      recommendation: JSON.parse(JSON.stringify(recommendation))
+      recommendation: JSON.parse(JSON.stringify(recommendation)),
+      category: recommendation.category
     };
     isCreatingRecommendation = false;
   }
@@ -116,7 +118,8 @@
         text: '',
         icon: '💡',
         final: true
-      }
+      },
+      category: activeCategory
     };
   }
   
@@ -253,16 +256,16 @@
   }
 </script>
 
-<div class="max-w-full">
-  <div class="flex justify-between items-center mb-4">
-    <h1 class="text-2xl font-bold">Flowchart Editor</h1>
+<div class="editor-container">
+  <div class="editor-header">
+    <h1 class="editor-title">Flowchart Editor</h1>
     
-    <div class="flex gap-2">
+    <div class="action-buttons flex gap-3">
       <button 
         on:click={handleSave}
-        class="px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700 flex items-center"
+        class="action-button success-button"
       >
-        <svg class="w-4 h-4 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z" />
           <polyline points="17 21 17 13 7 13 7 21" />
           <polyline points="7 3 7 8 15 8" />
@@ -272,9 +275,9 @@
       
       <button 
         on:click={handleExport}
-        class="px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center"
+        class="action-button info-button"
       >
-        <svg class="w-4 h-4 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
           <polyline points="7 10 12 15 17 10" />
           <line x1="12" y1="15" x2="12" y2="3" />
@@ -284,9 +287,9 @@
       
       <button 
         on:click={toggleImport}
-        class="px-3 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 flex items-center"
+        class="action-button secondary-button"
       >
-        <svg class="w-4 h-4 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
           <polyline points="17 10 12 15 7 10" />
           <line x1="12" y1="15" x2="12" y2="3" />
@@ -297,7 +300,7 @@
   </div>
 
   {#if showSavedMessage}
-    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4 flex items-center">
+    <div class="alert alert-success mb-4">
       <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
       </svg>
@@ -306,24 +309,28 @@
   {/if}
   
   {#if isImporting}
-    <div class="bg-white p-4 rounded-lg shadow-lg mb-4">
-      <h3 class="text-lg font-semibold mb-2">Import Flowchart Data</h3>
-      <textarea 
-        bind:value={importText} 
-        class="w-full p-2 border rounded"
-        rows="8"
-        placeholder="Paste JSON here..."
-      ></textarea>
-      <div class="flex justify-end gap-2 mt-3">
+    <div class="modal-content mb-4">
+      <div class="modal-header">
+        <h3 class="modal-title">Import Flowchart Data</h3>
+      </div>
+      <div class="form-group">
+        <textarea 
+          bind:value={importText} 
+          class="form-textarea"
+          rows="8"
+          placeholder="Paste JSON here..."
+        ></textarea>
+      </div>
+      <div class="form-buttons">
         <button 
           on:click={toggleImport}
-          class="px-3 py-1 border rounded hover:bg-gray-100"
+          class="action-button secondary-button"
         >
           Cancel
         </button>
         <button 
           on:click={handleImport}
-          class="px-3 py-1 bg-purple-600 text-white rounded hover:bg-purple-700"
+          class="action-button primary-button"
         >
           Import
         </button>
@@ -331,36 +338,33 @@
     </div>
   {/if}
   
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mb-6">
+  <div class="categories-grid">
     {#each Object.keys($flowchartStore).filter(key => key !== 'recommendations') as category}
       <div 
-        class="p-4 rounded-lg shadow cursor-pointer transition-all {activeCategory === category ? 'ring-2 ring-offset-2' : 'hover:shadow-md'}"
-        style="
-          background-color: {getCategoryColor(category) + '10'};
-          border-left: 4px solid {getCategoryColor(category)};
-          {activeCategory === category ? `ring-color: ${getCategoryColor(category)};` : ''}
-        "
+        class="category-card {activeCategory === category ? 'active' : ''}"
         on:click={() => activeCategory = category}
       >
-        <h2 class="text-lg font-semibold capitalize">
+        <div 
+          class="category-card-color"
+          style="background-color: {getCategoryColor(category)};"
+        ></div>
+        <h2 class="category-title capitalize">
           {category.replace(/-/g, ' ')}
         </h2>
-        <p class="text-sm text-gray-600 mt-1">
+        <p class="category-count">
           {$flowchartStore[category].length} decision points
         </p>
       </div>
     {/each}
     
     <div 
-      class="p-4 rounded-lg border-2 border-dashed flex items-center justify-center cursor-pointer hover:bg-gray-50"
+      class="add-category-card"
       on:click={handleAddCategory}
     >
-      <div class="text-center">
-        <svg class="w-8 h-8 mx-auto text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M12 5v14M5 12h14" />
-        </svg>
-        <span class="block mt-1 text-sm text-gray-500">Add New Category</span>
-      </div>
+      <svg class="add-category-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 5v14M5 12h14" />
+      </svg>
+      <span class="add-category-text">Add New Category</span>
     </div>
   </div>
   
@@ -373,10 +377,10 @@
           </h2>
           <button 
             on:click={handleDeleteCategory}
-            class="ml-2 p-1 text-red-500 hover:bg-red-100 rounded"
+            class="icon-button delete-button ml-2"
             title="Delete this category"
           >
-            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="3 6 5 6 21 6" />
               <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" />
             </svg>
@@ -384,15 +388,15 @@
         </div>
         
         <div class="flex gap-2">
-          <div class="flex border rounded overflow-hidden">
+          <div class="tab-container">
             <button 
-              class="px-3 py-1 {activeTab === 'nodes' ? 'bg-blue-500 text-white' : 'bg-gray-100'}" 
+              class="tab-button {activeTab === 'nodes' ? 'active' : ''}" 
               on:click={() => activeTab = 'nodes'}
             >
               Nodes
             </button>
             <button 
-              class="px-3 py-1 {activeTab === 'recommendations' ? 'bg-blue-500 text-white' : 'bg-gray-100'}" 
+              class="tab-button {activeTab === 'recommendations' ? 'active' : ''}" 
               on:click={() => activeTab = 'recommendations'}
             >
               Recommendations
@@ -402,7 +406,7 @@
           {#if activeTab === 'nodes'}
             <button 
               on:click={startCreatingNode}
-              class="px-3 py-1 bg-blue-100 text-blue-700 rounded flex items-center text-sm"
+              class="action-button primary-button"
             >
               <svg class="w-4 h-4 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M12 5v14M5 12h14" />
@@ -412,7 +416,7 @@
           {:else}
             <button 
               on:click={startCreatingRecommendation}
-              class="px-3 py-1 bg-blue-100 text-blue-700 rounded flex items-center text-sm"
+              class="action-button primary-button"
             >
               <svg class="w-4 h-4 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M12 5v14M5 12h14" />
@@ -429,36 +433,34 @@
             type="text"
             placeholder="Search nodes..."
             bind:value={nodeSearchQuery}
-            class="w-full p-2 border rounded"
+            class="search-input"
           />
         </div>
         
         <div class="space-y-2">
           {#each filteredNodes as node}
-            <div 
-              class="p-3 rounded-lg shadow-sm flex items-start relative hover:shadow-md"
-              style="
-                background-color: {getCategoryColor(activeCategory) + '20'};
-                border-left: 4px solid {getCategoryColor(activeCategory)};
-              "
-            >
-              <div class="flex-1">
-                <div class="font-medium">{node.text}</div>
-                <div class="text-sm text-gray-500 mt-1">ID: {node.id}</div>
-                {#if node.next}
-                  <div class="text-xs text-gray-500 mt-1">
-                    Options: {Object.keys(node.next).join(', ')}
-                  </div>
-                {/if}
-              </div>
+            <div class="node-card">
+              <div 
+                class="node-card-color"
+                style="background-color: {getCategoryColor(activeCategory)};"
+              ></div>
               
-              <div class="flex">
+              <div class="node-title">{node.text}</div>
+              <div class="node-id">ID: {node.id}</div>
+              
+              {#if node.next}
+                <div class="node-options">
+                  Options: {Object.keys(node.next).join(', ')}
+                </div>
+              {/if}
+              
+              <div class="node-actions">
                 <button 
                   on:click={() => startEditingNode(node)}
-                  class="p-1.5 hover:bg-blue-100 rounded-full text-blue-600"
+                  class="icon-button edit-button"
                   title="Edit node"
                 >
-                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
                     <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
                   </svg>
@@ -466,10 +468,10 @@
                 
                 <button 
                   on:click={() => handleDeleteNode(node.id)}
-                  class="p-1.5 hover:bg-red-100 rounded-full text-red-600"
+                  class="icon-button delete-button"
                   title="Delete node"
                 >
-                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <polyline points="3 6 5 6 21 6" />
                     <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" />
                     <line x1="10" y1="11" x2="10" y2="17" />
@@ -481,8 +483,14 @@
           {/each}
           
           {#if filteredNodes.length === 0}
-            <div class="p-4 text-center text-gray-500">
-              {nodeSearchQuery ? 'No nodes matching your search' : 'No nodes in this category yet'}
+            <div class="empty-state">
+              <svg class="empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
+                <line x1="9" y1="12" x2="15" y2="12"></line>
+              </svg>
+              <p class="empty-state-text">
+                {nodeSearchQuery ? 'No nodes matching your search' : 'No nodes in this category yet. Click "Add Node" to create one.'}
+              </p>
             </div>
           {/if}
         </div>
@@ -493,29 +501,28 @@
             type="text"
             placeholder="Search recommendations..."
             bind:value={recommendationSearchQuery}
-            class="w-full p-2 border rounded"
+            class="search-input"
           />
         </div>
         
         <div class="space-y-2">
           {#each filteredRecommendations as rec}
-            <div 
-              class="p-3 rounded-lg shadow-sm flex items-start relative hover:shadow-md"
-              style="background-color: rgba(100, 100, 100, 0.05);"
-            >
-              <div class="mr-3 text-2xl">{rec.icon || '💡'}</div>
-              <div class="flex-1">
-                <div class="font-medium">{rec.text}</div>
-                <div class="text-sm text-gray-500 mt-1">ID: {rec.id}</div>
+            <div class="node-card">
+              <div class="flex items-start">
+                <div class="mr-3 text-2xl">{rec.icon || '💡'}</div>
+                <div class="flex-1">
+                  <div class="node-title">{rec.text}</div>
+                  <div class="node-id">ID: {rec.id}</div>
+                </div>
               </div>
               
-              <div class="flex">
+              <div class="node-actions">
                 <button 
                   on:click={() => startEditingRecommendation(rec.id, rec)}
-                  class="p-1.5 hover:bg-blue-100 rounded-full text-blue-600"
+                  class="icon-button edit-button"
                   title="Edit recommendation"
                 >
-                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
                     <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
                   </svg>
@@ -523,10 +530,10 @@
                 
                 <button 
                   on:click={() => handleDeleteRecommendation(rec.id)}
-                  class="p-1.5 hover:bg-red-100 rounded-full text-red-600"
+                  class="icon-button delete-button"
                   title="Delete recommendation"
                 >
-                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <polyline points="3 6 5 6 21 6" />
                     <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" />
                     <line x1="10" y1="11" x2="10" y2="17" />
@@ -538,10 +545,17 @@
           {/each}
           
           {#if filteredRecommendations.length === 0}
-            <div class="p-4 text-center text-gray-500">
-              {recommendationSearchQuery 
-                ? 'No recommendations matching your search' 
-                : 'No recommendations available yet'}
+            <div class="empty-state">
+              <svg class="empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="16"></line>
+                <line x1="8" y1="12" x2="16" y2="12"></line>
+              </svg>
+              <p class="empty-state-text">
+                {recommendationSearchQuery 
+                  ? 'No recommendations matching your search' 
+                  : 'No recommendations available yet. Click "Add Recommendation" to create one.'}
+              </p>
             </div>
           {/if}
         </div>
@@ -551,8 +565,8 @@
   
   <!-- Modal for Node Editing -->
   {#if editingNode}
-    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div class="max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+    <div class="modal-overlay">
+      <div class="modal-content max-w-2xl">
         <NodeEditor 
           node={editingNode.node} 
           category={editingNode.category}
@@ -567,11 +581,11 @@
 
   <!-- Modal for Recommendation Editing -->
   {#if editingRecommendation}
-    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div class="max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <RecommendationEditor 
-          recommendation={editingRecommendation.recommendation} 
-          recommendationId={editingRecommendation.recommendationId}
+    <div class="modal-overlay">
+      <div class="modal-content max-w-2xl">
+        <RecommendationEditor
+          recommendation={editingRecommendation.recommendation}
+          category={editingRecommendation.category}
           allRecommendations={$flowchartStore.recommendations || {}}
           on:save={handleRecommendationSave}
           on:cancel={handleCancel}

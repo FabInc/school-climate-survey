@@ -1,55 +1,95 @@
 <script>
   import { createEventDispatcher } from 'svelte';
-  import { flowchartStore } from './flowchartStore.js';
+  import { generateId } from './utils.js';
   
   export let node;
   export let category;
-  export let recommendations;
+  export let recommendations = {};
   export let allNodes = [];
+  
+  // Make deep copy to avoid modifying parent's node directly
+  let workingNode = JSON.parse(JSON.stringify(node));
+  let nodeIdError = '';
+  let linkError = '';
+  
+  // Tracking which next option should be removed
+  let toRemoveKey = null;
   
   const dispatch = createEventDispatcher();
   
-  let editedNode = JSON.parse(JSON.stringify(node)); // Deep copy to avoid direct mutation
-  let answers = Object.keys(editedNode.next || {}).map(answer => ({
-    text: answer,
-    nextId: editedNode.next[answer]
-  }));
-  
-  // Generate unique ID for new nodes
-  function generateNodeId(category) {
-    const prefix = category.split('-').map(part => part[0]).join('');
-    const existingIds = allNodes
-      .filter(n => n.id.startsWith(prefix))
-      .map(n => {
-        const num = parseInt(n.id.replace(/^[a-z]+/, ''), 10);
-        return isNaN(num) ? 0 : num;
-      });
+  function validateNodeId(id) {
+    if (!id.trim()) {
+      return 'Node ID is required';
+    }
     
-    const maxId = existingIds.length > 0 ? Math.max(...existingIds) : 0;
-    return `${prefix}${maxId + 1}`;
+    // Check if ID is already being used by another node
+    const isExistingNode = allNodes.some(n => n.id === id && n.id !== node.id);
+    if (isExistingNode) {
+      return 'This Node ID is already in use';
+    }
+    
+    return '';
   }
   
-  function addAnswer() {
-    answers = [...answers, { text: '', nextId: 'end' }];
-  }
-  
-  function removeAnswer(index) {
-    answers = answers.filter((_, i) => i !== index);
-  }
-  
-  function saveChanges() {
-    // Convert answers array back to the next object format
-    editedNode.next = {};
-    answers.forEach(answer => {
-      if (answer.text.trim()) {
-        editedNode.next[answer.text] = answer.nextId;
+  function handleAddNext() {
+    const key = prompt('Enter key (option text like "yes", "no", etc.):');
+    if (key && key.trim()) {
+      // Validate option isn't duplicate
+      if (workingNode.next && workingNode.next[key]) {
+        alert(`Option "${key}" already exists.`);
+        return;
       }
-    });
+      
+      // Ensure next exists
+      if (!workingNode.next) {
+        workingNode.next = {};
+      }
+      
+      // Add default next endpoint
+      workingNode.next[key] = 'end';
+      workingNode = {...workingNode}; // Trigger reactivity
+    }
+  }
+  
+  function handleRemoveNext() {
+    if (toRemoveKey && workingNode.next) {
+      delete workingNode.next[toRemoveKey];
+      workingNode = {...workingNode}; // Trigger reactivity
+      toRemoveKey = null;
+    }
+  }
+  
+  function saveNode() {
+    const updatedId = workingNode.id || generateId(category);
+    nodeIdError = validateNodeId(updatedId);
     
-    dispatch('save', { 
+    if (nodeIdError) {
+      return;
+    }
+    
+    // Check if we're linking to a node that doesn't exist
+    linkError = '';
+    if (workingNode.next) {
+      for (const [key, value] of Object.entries(workingNode.next)) {
+        if (value === 'end' || value.startsWith('rec:')) continue;
+        
+        // Check if the node exists
+        const targetExists = allNodes.some(n => n.id === value);
+        if (!targetExists) {
+          linkError = `Target node "${value}" doesn't exist. Either create it or use a valid node ID.`;
+          return;
+        }
+      }
+    }
+    
+    if (linkError) {
+      return;
+    }
+    
+    dispatch('save', {
       category,
-      nodeId: editedNode.id,
-      updatedNode: editedNode
+      nodeId: node.id,
+      updatedNode: workingNode
     });
   }
   
@@ -57,122 +97,171 @@
     dispatch('cancel');
   }
   
-  // Get all node IDs from this category for the dropdown
-  $: nodeOptions = allNodes
-    .filter(n => n.id !== editedNode.id) // Exclude current node
-    .map(n => ({
-      id: n.id,
-      text: `${n.id}: ${n.text.substring(0, 30)}${n.text.length > 30 ? '...' : ''}`
-    }));
-  
-  // Get all recommendation IDs
-  $: recommendationOptions = Object.keys(recommendations || {}).map(id => ({
-    id,
-    text: `${id}: ${recommendations[id].text.substring(0, 30)}${recommendations[id].text.length > 30 ? '...' : ''}`
-  }));
+  // For prefixing recommendation IDs in the select
+  function getDisplayName(value) {
+    if (value === 'end') return 'END';
+    
+    if (value.startsWith('rec:')) {
+      const recId = value.replace('rec:', '');
+      if (recommendations[recId]) {
+        return `REC: ${recId} - ${recommendations[recId].text}`;
+      }
+      return `REC: ${recId}`;
+    }
+    
+    return value;
+  }
 </script>
 
-<div class="bg-white p-4 rounded-lg shadow-lg max-w-2xl mx-auto">
-  <h3 class="text-lg font-semibold mb-4">
-    {node.id ? 'Edit Node' : 'Create New Node'}
-  </h3>
+<div class="editor-panel">
+  <div class="editor-panel-header">
+    <h2 class="editor-panel-title">{node.id ? 'Edit Node' : 'New Node'}</h2>
+  </div>
   
-  <div class="mb-4">
-    <label class="block text-sm font-medium mb-1">Node ID</label>
-    <input 
-      type="text" 
-      bind:value={editedNode.id} 
-      class="w-full p-2 border rounded"
-      disabled={!!node.id} 
-      placeholder={node.id ? '' : generateNodeId(category)}
-    />
-    {#if !node.id}
-      <p class="text-xs text-gray-500 mt-1">ID will be auto-generated if left blank</p>
+  <div class="editor-panel-body">
+    <div class="form-group">
+      <label for="node-id" class="form-label">Node ID</label>
+      <input 
+        type="text" 
+        id="node-id" 
+        placeholder="Enter node ID or leave blank to auto-generate"
+        bind:value={workingNode.id}
+        class="form-input {nodeIdError ? 'error' : ''}"
+      />
+      {#if nodeIdError}
+        <div class="form-error">{nodeIdError}</div>
+      {/if}
+    </div>
+    
+    <div class="form-group">
+      <label for="node-text" class="form-label">Question Text</label>
+      <textarea 
+        id="node-text" 
+        placeholder="Enter the question text"
+        bind:value={workingNode.text}
+        class="form-textarea"
+        rows="4"
+      ></textarea>
+    </div>
+    
+    <div class="form-group">
+      <label for="node-help" class="form-label">Help Text (Optional)</label>
+      <textarea 
+        id="node-help" 
+        placeholder="Enter any help text to clarify the question"
+        bind:value={workingNode.help}
+        class="form-textarea"
+        rows="3"
+      ></textarea>
+    </div>
+    
+    <!-- Next Options -->
+    <div class="form-section">
+      <div class="form-section-header">
+        <h3 class="form-section-title">Navigation Options</h3>
+        <button 
+          on:click={handleAddNext}
+          class="action-button primary-button small"
+          type="button"
+        >
+          <svg class="icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 5v14M5 12h14" />
+          </svg>
+          Add Option
+        </button>
+      </div>
+      
+      {#if linkError}
+        <div class="alert alert-error">{linkError}</div>
+      {/if}
+      
+      {#if workingNode.next && Object.keys(workingNode.next).length > 0}
+        <div class="options-list">
+          {#each Object.entries(workingNode.next) as [key, value]}
+            <div class="option-item">
+              <div class="option-key">{key}</div>
+              
+              <select 
+                bind:value={workingNode.next[key]}
+                class="form-select"
+              >
+                <option value="end">END (Visualization End)</option>
+                
+                <optgroup label="Go to Recommendation">
+                  {#each Object.keys(recommendations) as recId}
+                    <option value="rec:{recId}">
+                      {recId} - {recommendations[recId].text.substring(0, 40)}...
+                    </option>
+                  {/each}
+                </optgroup>
+                
+                <optgroup label="Go to Node">
+                  {#each allNodes.filter(n => n.id !== node.id) as otherNode}
+                    <option value={otherNode.id}>
+                      {otherNode.id} - {otherNode.text.substring(0, 40)}...
+                    </option>
+                  {/each}
+                </optgroup>
+              </select>
+              
+              <button 
+                on:click={() => toRemoveKey = key}
+                class="icon-button delete-button"
+                title="Remove this option"
+              >
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="3 6 5 6 21 6" />
+                  <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" />
+                </svg>
+              </button>
+            </div>
+          {/each}
+        </div>
+      {:else}
+        <div class="empty-state small">
+          <svg class="empty-state-icon small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="16"></line>
+            <line x1="8" y1="12" x2="16" y2="12"></line>
+          </svg>
+          <p class="empty-state-text">No options defined yet. Click "Add Option" to add navigation paths.</p>
+        </div>
+      {/if}
+    </div>
+    
+    {#if toRemoveKey}
+      <div class="confirm-dialog">
+        <p>Remove option "{toRemoveKey}" that goes to {getDisplayName(workingNode.next[toRemoveKey])}?</p>
+        <div class="confirm-actions">
+          <button 
+            on:click={() => toRemoveKey = null}
+            class="action-button secondary-button"
+          >
+            Cancel
+          </button>
+          <button 
+            on:click={handleRemoveNext}
+            class="action-button danger-button"
+          >
+            Remove
+          </button>
+        </div>
+      </div>
     {/if}
   </div>
   
-  <div class="mb-4">
-    <label class="block text-sm font-medium mb-1">Question Text</label>
-    <textarea 
-      bind:value={editedNode.text} 
-      class="w-full p-2 border rounded"
-      rows="3"
-      placeholder="Enter the question or decision point text"
-    ></textarea>
-  </div>
-  
-  <div class="mb-4">
-    <label class="block text-sm font-medium mb-1">Help Text (Optional)</label>
-    <textarea 
-      bind:value={editedNode.help} 
-      class="w-full p-2 border rounded"
-      rows="2"
-      placeholder="Additional context or help text for this question"
-    ></textarea>
-  </div>
-  
-  <div class="mb-4">
-    <label class="block text-sm font-medium mb-2">Answers</label>
-    {#each answers as answer, i}
-      <div class="flex items-center gap-2 mb-2">
-        <input 
-          type="text" 
-          bind:value={answer.text} 
-          placeholder="Answer option (e.g., yes, no, maybe)"
-          class="flex-1 p-2 border rounded"
-        />
-        <select 
-          bind:value={answer.nextId} 
-          class="p-2 border rounded w-60"
-        >
-          <option value="end">End (No next node)</option>
-          <optgroup label="Questions">
-            {#each nodeOptions as option}
-              <option value={option.id}>{option.text}</option>
-            {/each}
-          </optgroup>
-          <optgroup label="Recommendations">
-            {#each recommendationOptions as option}
-              <option value={option.id}>{option.text}</option>
-            {/each}
-          </optgroup>
-        </select>
-        <button 
-          on:click={() => removeAnswer(i)}
-          class="p-1 text-red-500 hover:bg-red-100 rounded"
-          aria-label="Remove answer"
-        >
-          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M18 6L6 18M6 6l12 12" />
-          </svg>
-        </button>
-      </div>
-    {/each}
-    
-    <button 
-      on:click={addAnswer}
-      class="mt-2 px-3 py-1 bg-blue-100 text-blue-700 rounded flex items-center text-sm"
-    >
-      <svg class="w-4 h-4 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M12 5v14M5 12h14" />
-      </svg>
-      Add Answer
-    </button>
-  </div>
-  
-  <div class="flex justify-end gap-2 mt-6">
+  <div class="editor-panel-footer">
     <button 
       on:click={cancel}
-      class="px-4 py-2 border rounded hover:bg-gray-100"
+      class="action-button secondary-button"
     >
       Cancel
     </button>
     <button 
-      on:click={saveChanges}
-      class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-      disabled={!editedNode.text || !editedNode.id}
+      on:click={saveNode}
+      class="action-button primary-button"
     >
-      Save Changes
+      Save
     </button>
   </div>
 </div> 
