@@ -11,7 +11,7 @@
 <div class="welcome-container">
   <h2>Welcome to the CRIBS Climate Assessment Tool</h2>
   <p>
-    This tool helps education leaders assess climate-related risks in their schools and health centres. Based on your responses, it provides tailored recommendations for improvement. It is a beta version and for experimental purposes only. 
+    This tool helps  to assess climate-related risks in their schools and health centres. Based on your responses, it provides tailored recommendations for improvement. It is a beta version and for experimental purposes only. 
   </p>
   <button on:click={startAssessment}>Start Assessment</button>
 </div>
