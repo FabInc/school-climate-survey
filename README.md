@@ -1,4 +1,4 @@
-# School Climate Intervention Survey
+# CRIBS Climate Intervention Survey
 
 A web application built with Svelte and Vite to guide users through decision trees related to school facility climate resilience, providing relevant recommendations based on their answers.
 
