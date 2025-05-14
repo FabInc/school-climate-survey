@@ -3,7 +3,7 @@
 </script>
 
 <header>
-  <h1>School Climate Assessment Tool</h1>
+  <h1>CRIBS Climate Assessment Tool</h1>
   
   <div class="actions-container">
     <!-- Slot for navigation buttons -->
